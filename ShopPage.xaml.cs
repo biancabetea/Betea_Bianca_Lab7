@@ -1,4 +1,5 @@
 using Betea_Bianca_Lab7.Models;
+using Plugin.LocalNotification;
 
 namespace Betea_Bianca_Lab7;
 
@@ -28,5 +29,20 @@ public partial class ShopPage : ContentPage
         // var myLocation = await Geolocation.GetLocationAsync();
         var myLocation = new Location(46.7731796289, 23.6213886738);
         await Map.OpenAsync(location, options);
+        var distance = myLocation.CalculateDistance(location,
+DistanceUnits.Kilometers);
+        if (distance < 4)
+        {
+            var request = new NotificationRequest
+            {
+                Title = "Ai de facut cumparaturi in apropiere!",
+                Description = address,
+                Schedule = new NotificationRequestSchedule
+                {
+                    NotifyTime = DateTime.Now.AddSeconds(1)
+                }
+            };
+            LocalNotificationCenter.Current.Show(request);
+        }
     }
 }
